@@ -222,7 +222,7 @@ std::string session::get_query() const
     else
     {
         // preserve logical constness of get_query,
-        // stream used as read-only here, 
+        // stream used as read-only here,
         session* pthis = const_cast<session*>(this);
 
         // sole place where any user-defined query transformation is applied
@@ -235,7 +235,7 @@ std::string session::get_query() const
 }
 
 void session::set_query_transformation_(
-        std::auto_ptr<details::query_transformation_function> qtf)
+        std::unique_ptr<details::query_transformation_function> qtf)
 {
     if (isFromPool_)
     {

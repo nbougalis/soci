@@ -264,7 +264,7 @@ public:
     {
         return backEndFactory_;
     }
-    
+
     std::string get_connect_string() const
     {
         return connectString_;
@@ -462,7 +462,7 @@ private:
     backend_factory const &backEndFactory_;
     std::string const connectString_;
 
-typedef std::auto_ptr<table_creator_base> auto_table_creator;
+typedef std::unique_ptr<table_creator_base> auto_table_creator;
 
 void test0()
 {
@@ -483,7 +483,7 @@ void test0()
 void test1()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
 
     std::string msg;
@@ -534,7 +534,7 @@ void test2()
 
         {
             auto_table_creator tableCreator(tc_.table_creator_1(sql));
-            
+
             short three(3);
             sql << "insert into soci_test(sh) values(:id)", use(three);
             short sh(0);
@@ -570,7 +570,7 @@ void test2()
             sql << "select d from soci_test", into(d);
             ASSERT_EQUAL(d, pi);
         }
-        
+
         {
             auto_table_creator tableCreator(tc_.table_creator_1(sql));
 
@@ -593,7 +593,7 @@ void test2()
             assert(t.tm_min  == 0);
             assert(t.tm_sec  == 0);
         }
-        
+
         {
             auto_table_creator tableCreator(tc_.table_creator_1(sql));
 
@@ -606,7 +606,7 @@ void test2()
             nov15.tm_sec = 17;
 
             sql << "insert into soci_test(tm) values(:tm)", use(nov15);
-            
+
             std::tm t;
             sql << "select tm from soci_test", into(t);
             assert(t.tm_year == 105);
@@ -753,7 +753,7 @@ void test3()
         {
             // create and populate the test table
             auto_table_creator tableCreator(tc_.table_creator_1(sql));
-            
+
             int const rowsToTest = 10;
             for (int i = 0; i != rowsToTest; ++i)
             {
@@ -1113,7 +1113,7 @@ void test3()
 void test4()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -1197,7 +1197,7 @@ void test4()
             // for even more convenience, fetch should not fail
             // but just report end of rowset
             // (and vectors should be truncated)
-            
+
             vals.resize(1);
             inds.resize(1);
 
@@ -1229,7 +1229,7 @@ void test4()
 void test5()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -1509,7 +1509,7 @@ void test7()
     {
         session sql(backEndFactory_, connectString_);
         auto_table_creator tableCreator(tc_.table_creator_1(sql));
-        
+
         {
             int i1 = 5;
             int i2 = 6;
@@ -2193,7 +2193,7 @@ void test13()
         assert(r.size() == 1);
         assert(r.get_properties(0).get_data_type() == dt_integer);
         assert(r.get<int>(0) == 20);
-        
+
         id = 3;
         st.execute(true);
         assert(r.size() == 1);
@@ -2241,9 +2241,9 @@ void test14()
         row r2;
         statement st = (sql.prepare << "select * from soci_test", into(r2));
         st.execute();
-        
+
         assert(r2.size() == 2);
-        
+
         int count = 0;
         while (st.fetch())
         {
@@ -2261,7 +2261,7 @@ void test15()
     session sql(backEndFactory_, connectString_);
 
     sql.uppercase_column_names(true);
-    
+
     // simple conversion (between single basic type and user type)
 
     {
@@ -2322,7 +2322,7 @@ void test15()
         PhonebookEntry p2;
         statement st = (sql.prepare << "select * from soci_test", into(p2));
         st.execute();
-        
+
         int count = 0;
         while (st.fetch())
         {
@@ -2398,7 +2398,7 @@ void test15()
         PhonebookEntry2 p2;
         statement st = (sql.prepare << "select * from soci_test", into(p2));
         st.execute();
-        
+
         int count = 0;
         while (st.fetch())
         {
@@ -2572,7 +2572,7 @@ void test17()
 void test18()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -2615,7 +2615,7 @@ void test18()
 void test19()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -2640,7 +2640,7 @@ void test20()
     session sql(backEndFactory_, connectString_);
 
     sql.uppercase_column_names(true);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_2(sql));
     {
@@ -2812,7 +2812,7 @@ void test20()
 void test21()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -2849,7 +2849,7 @@ void test21()
 void test22()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -2883,7 +2883,7 @@ void test22()
 void test23()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -2913,7 +2913,7 @@ void test23()
 void test24()
 {
     session sql(backEndFactory_, connectString_);
-    
+
     // create and populate the test table
     auto_table_creator tableCreator(tc_.table_creator_1(sql));
     {
@@ -2954,7 +2954,7 @@ void test25()
     session sql(backEndFactory_, connectString_);
 
     sql.uppercase_column_names(true);
-    
+
     {
         auto_table_creator tableCreator(tc_.table_creator_3(sql));
 
@@ -2970,7 +2970,7 @@ void test25()
         sql << "insert into soci_test values('doe', '(404)123-4567')";
 
         rowset<PhonebookEntry> rs = (sql.prepare << "select * from soci_test");
-        
+
         int count = 0;
         for (rowset<PhonebookEntry>::const_iterator it = rs.begin(); it != rs.end(); ++it)
         {
@@ -3133,7 +3133,7 @@ void test26()
 
             rowset<row>::const_iterator it = rs.begin();
             assert(it != rs.end());
-            
+
             row const& r1 = (*it);
 
             assert(r1.size() == 3);
@@ -3832,7 +3832,7 @@ void run_query_transformation_test(session& sql)
     {
         sql << "insert into soci_test(c) values(\'" << c << "\')";
     }
-    
+
     char const* query = "select count(*) from soci_test";
 
     // free function, no-op
@@ -3995,7 +3995,7 @@ void test_get_affected_rows()
         {
             v[i] = (7 + i);
         }
-        
+
         // test affected rows for bulk operations.
         statement st4 = (sql.prepare <<
             "delete from soci_test where val = :v", use(v));
@@ -4007,15 +4007,15 @@ void test_get_affected_rows()
         w[1] = "a"; // this invalid value may cause an exception.
         statement st5 = (sql.prepare <<
             "insert into soci_test(val) values(:val)", use(w));
-        try { st5.execute(true); } 
+        try { st5.execute(true); }
         catch(...) {}
 
         // confirm the partial insertion.
         int val = 0;
         sql << "select count(val) from soci_test", into(val);
         if(val != 0)
-        {        
-            // test the preserved 'number of rows 
+        {
+            // test the preserved 'number of rows
             // affected' after a potential failure.
             assert(st5.get_affected_rows() != 0);
         }
@@ -4024,7 +4024,7 @@ void test_get_affected_rows()
     std::cout << "test get_affected_rows passed" << std::endl;
 }
 
-// test fix for: Backend is not set properly with connection pool (pull #5) 
+// test fix for: Backend is not set properly with connection pool (pull #5)
 void test_pull5()
 {
     {
@@ -4056,12 +4056,12 @@ void test_issue67()
         try
         {
             rowset<row> rs1 = (sql.prepare << "select * from soci_testX");
-            
+
             // TODO: On Linux, no exception thrown; neither from prepare, nor from execute?
-            // soci_odbc_test_postgresql: 
+            // soci_odbc_test_postgresql:
             //     /home/travis/build/SOCI/soci/src/core/test/common-tests.h:3505:
             //     void soci::tests::common_tests::test_issue67(): Assertion `!"exception expected"' failed.
-            //assert(!"exception expected"); // relax temporarily 
+            //assert(!"exception expected"); // relax temporarily
         }
         catch (soci_error const &e)
         {
